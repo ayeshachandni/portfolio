@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Digital Marketing &amp; Web Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0E17;
+    --bg-soft: #10141F;
+    --glass: rgba(255,255,255,0.045);
+    --glass-border: rgba(255,255,255,0.09);
+    --text: #E8EAF2;
+    --muted: #9AA1B4;
+    --violet: #7C5CFF;
+    --cyan: #22D3EE;
+    --pink: #FF6B9D;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: radial-gradient(ellipse 120% 80% at 50% -10%, #1a1440 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+
+  /* ---------- ambient glow layer ---------- */
+  .glow-orb{
+    position:fixed;
+    border-radius:50%;
+    filter: blur(90px);
+    opacity:0.35;
+    z-index:0;
+    pointer-events:none;
+  }
+  .glow-orb.a{ width:420px; height:420px; background:var(--violet); top:-10%; left:-8%; }
+  .glow-orb.b{ width:380px; height:380px; background:var(--cyan); bottom:5%; right:-10%; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 22px 6%;
+    backdrop-filter: blur(14px);
+    background: rgba(11,14,23,0.55);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .logo{ font-family:var(--font-display); font-weight:700; font-size:1.15rem; letter-spacing:0.5px; }
+  .logo span{ color: var(--cyan); }
+  nav ul{ list-style:none; display:flex; gap:34px; }
+  nav a{ color:var(--muted); text-decoration:none; font-size:0.92rem; font-weight:500; transition:color .25s; }
+  nav a:hover{ color:var(--text); }
+
+  section{ position:relative; z-index:1; padding: 140px 6% 100px; max-width:1200px; margin:0 auto; }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    color:var(--cyan);
+    font-size:0.8rem;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:24px; height:1px; background:var(--cyan); }
+
+  h1,h2,h3{ font-family:var(--font-display); font-weight:700; }
+
+  /* ---------- glass card ---------- */
+  .glass{
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* ================= HERO ================= */
+  .hero{
+    min-height:100vh;
+    display:flex; align-items:center;
+    padding-top: 100px;
+    perspective: 1200px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    align-items:center;
+    width:100%;
+  }
+  .hero h1{
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    line-height:1.12;
+    margin-bottom: 22px;
+  }
+  .hero h1 .grad{
+    background: linear-gradient(100deg, var(--violet), var(--cyan));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.lead{
+    color: var(--muted);
+    font-size: 1.08rem;
+    max-width: 480px;
+    line-height:1.7;
+    margin-bottom: 34px;
+  }
+  .btn-row{ display:flex; gap:16px; flex-wrap:wrap; }
+  .btn{
+    font-family: var(--font-mono);
+    font-size:0.88rem;
+    padding: 14px 26px;
+    border-radius: 10px;
+    text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+    transition: transform .25s, box-shadow .25s;
+  }
+  .btn-primary{
+    background: linear-gradient(100deg, var(--violet), #6947e0);
+    color:#fff;
+    box-shadow: 0 8px 30px rgba(124,92,255,0.35);
+  }
+  .btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 14px 34px rgba(124,92,255,0.5); }
+  .btn-ghost{
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+  }
+  .btn-ghost:hover{ border-color: var(--cyan); transform: translateY(-3px); }
+
+  /* floating orbit cards */
+  .orbit-wrap{
+    position:relative;
+    height: 460px;
+    transform-style: preserve-3d;
+  }
+  .float-card{
+    position:absolute;
+    padding: 20px 22px;
+    width: 210px;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .15s ease-out;
+  }
+  .float-card h4{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color: var(--cyan);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:8px;
+  }
+  .float-card p{ font-size:0.85rem; color:var(--muted); line-height:1.5; }
+  .card-1{ top: 0; left: 8%; }
+  .card-2{ top: 34%; right: 0%; }
+  .card-3{ bottom: 4%; left: 22%; }
+
+  .scroll-cue{
+    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    color:var(--muted); font-family:var(--font-mono); font-size:0.72rem;
+  }
+  .scroll-cue .line{ width:1px; height:34px; background:linear-gradient(var(--cyan), transparent); animation: pulse-line 1.8s infinite; }
+  @keyframes pulse-line{ 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+
+  /* ================= reveal on scroll ================= */
+  .reveal{ opacity:0; transform: translateY(36px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.show{ opacity:1; transform:translateY(0); }
+
+  /* ================= ABOUT ================= */
+  .about-grid{
+    display:grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 50px;
+    align-items:start;
+  }
+  .about-grid p{ color:var(--muted); line-height:1.85; margin-bottom:16px; font-size:1rem; }
+  .about-grid strong{ color:var(--text); }
+
+  .skills-col h3{ font-size:1.4rem; margin-bottom:22px; }
+  .skill-group{ margin-bottom: 26px; }
+  .skill-group .label{ font-family:var(--font-mono); font-size:0.78rem; color:var(--violet); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .tag{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    padding: 7px 14px;
+    border-radius:8px;
+    border:1px solid var(--glass-border);
+    background: rgba(255,255,255,0.02);
+    color: var(--text);
+    transition: border-color .25s, transform .25s;
+  }
+  .tag:hover{ border-color:var(--cyan); transform:translateY(-2px); }
+
+  /* ================= EXPERIENCE ================= */
+  .timeline{ position:relative; padding-left: 34px; }
+  .timeline::before{
+    content:''; position:absolute; left:6px; top:6px; bottom:6px; width:1px;
+    background: linear-gradient(var(--violet), var(--cyan));
+  }
+  .tl-item{ position:relative; padding-bottom:44px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-dot{
+    position:absolute; left:-34px; top:4px; width:13px; height:13px; border-radius:50%;
+    background: var(--bg); border:2px solid var(--cyan);
+  }
+  .tl-item .role{ font-family:var(--font-display); font-size:1.2rem; margin-bottom:4px; }
+  .tl-item .org{ color:var(--cyan); font-family:var(--font-mono); font-size:0.85rem; margin-bottom:10px; }
+  .tl-item .desc{ color:var(--muted); line-height:1.7; max-width:640px; }
+
+  /* ================= PROJECTS ================= */
+  .proj-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 26px;
+  }
+  .proj-card{
+    padding: 28px;
+    transform-style: preserve-3d;
+    transition: transform .35s ease, border-color .35s;
+    cursor:default;
+  }
+  .proj-card:hover{ border-color: rgba(124,92,255,0.5); }
+  .proj-num{ font-family:var(--font-mono); color:var(--muted); font-size:0.8rem; margin-bottom:16px; }
+  .proj-card h3{ font-size:1.2rem; margin-bottom:10px; }
+  .proj-card p{ color:var(--muted); font-size:0.9rem; line-height:1.6; margin-bottom:18px; }
+  .proj-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+  .proj-tags span{ font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan); border:1px solid rgba(34,211,238,0.3); padding:4px 10px; border-radius:6px; }
+
+  /* ================= CONTACT ================= */
+  .contact-grid{
+    display:grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 50px;
+  }
+  .social-list{ display:flex; flex-direction:column; gap:14px; margin-top:26px; }
+  .social-list a{
+    color:var(--text); text-decoration:none; font-family:var(--font-mono); font-size:0.92rem;
+    display:flex; align-items:center; gap:12px; padding:12px 16px;
+    border:1px solid var(--glass-border); border-radius:10px; transition: all .25s;
+  }
+  .social-list a:hover{ border-color:var(--violet); transform:translateX(6px); background:rgba(124,92,255,0.06); }
+  .social-list .dot{ width:8px; height:8px; border-radius:50%; background:var(--cyan); }
+
+  form{ padding: 32px; display:flex; flex-direction:column; gap:18px; }
+  .field{ display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-family:var(--font-mono); font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .field input, .field textarea{
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size:0.95rem;
+    outline:none;
+    transition: border-color .25s;
+  }
+  .field input:focus, .field textarea:focus{ border-color: var(--cyan); }
+  .field textarea{ resize:vertical; min-height:110px; }
+  .submit-btn{
+    align-self:flex-start;
+    font-family:var(--font-mono);
+    background: linear-gradient(100deg, var(--violet), var(--cyan));
+    color:#0B0E17; font-weight:600;
+    border:none; padding:14px 28px; border-radius:10px;
+    cursor:pointer; transition: transform .25s;
+  }
+  .submit-btn:hover{ transform:translateY(-3px); }
+
+  footer{
+    text-align:center; padding: 40px 6% 50px; color:var(--muted); font-size:0.85rem;
+    border-top:1px solid var(--glass-border); position:relative; z-index:1;
+  }
+  footer span{ color:var(--cyan); }
+
+  @media (max-width: 860px){
+    .hero-grid, .about-grid, .contact-grid{ grid-template-columns:1fr; }
+    .orbit-wrap{ height:340px; margin-top:20px; }
+    nav ul{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+
+  :focus-visible{ outline: 2px solid var(--cyan); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
+
+<nav>
+  <div class="logo">Ayesha<span>Chandni</span></div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">Digital Marketing · Web Development</div>
+      <h1>I plan the strategy,<br> then <span class="grad">build it</span> into reality.</h1>
+      <p class="lead">
+        2 years of experience in Digital Marketing and Web Development at Cybex IT Group.
+        A background in MS Education (Agriculture University) brings a research-driven approach
+        to every campaign and every page I build.
+      </p>
+      <div class="btn-row">
+        <a href="#projects" class="btn btn-primary">View Projects →</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      </div>
+    </div>
+
+    <div class="orbit-wrap" id="orbitWrap">
+      <div class="float-card glass card-1" data-depth="30">
+        <h4>SEO &amp; Growth</h4>
+        <p>Search rankings and organic traffic strategy.</p>
+      </div>
+      <div class="float-card glass card-2" data-depth="55">
+        <h4>Web Development</h4>
+        <p>Responsive websites built with HTML, CSS, JS.</p>
+      </div>
+      <div class="float-card glass card-3" data-depth="20">
+        <h4>Content &amp; Ads</h4>
+        <p>Social media campaigns that convert.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue"><div class="line"></div>SCROLL</div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="eyebrow reveal">About</div>
+  <h2 class="reveal" style="font-size:2.2rem; margin-bottom:40px;">From education, to marketing, to code.</h2>
+
+  <div class="about-grid">
+    <div class="reveal">
+      <p>My academic foundation is an <strong>MS in Education from Agriculture University</strong>, where I
+      developed strong research, analysis, and structured thinking skills. These are the same skills I
+      apply today to Digital Marketing campaigns and Web Development projects.</p>
+      <p>Over the past <strong>2 years at Cybex IT Group</strong>, I've built hands-on experience across
+      SEO, social media strategy, and front-end development — a rare combination that connects marketing
+      strategy with technical execution.</p>
+    </div>
+
+    <div class="skills-col reveal">
+      <h3>Skills</h3>
+
+      <div class="skill-group">
+        <div class="label">Digital Marketing</div>
+        <div class="tag-row">
+          <span class="tag">SEO</span>
+          <span class="tag">Google Ads</span>
+          <span class="tag">Social Media Marketing</span>
+          <span class="tag">Content Strategy</span>
+          <span class="tag">Google Analytics</span>
+          <span class="tag">Email Marketing</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="label">Web Development</div>
+        <div class="tag-row">
+          <span class="tag">HTML5</span>
+          <span class="tag">CSS3</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">Responsive Design</span>
+          <span class="tag">WordPress</span>
+          <span class="tag">Git</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section id="experience">
+  <div class="eyebrow reveal">Experience</div>
+  <h2 class="reveal" style="font-size:2.2rem; margin-bottom:44px;">Work Timeline</h2>
+
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="role">Digital Marketing &amp; Web Development Executive</div>
+      <div class="org">Cybex IT Group — 2024 to Present (2 years)</div>
+      <div class="desc">
+        Leading SEO campaigns, social media strategy, and development/maintenance of client websites.
+        Cross-functional work that aligns marketing goals with technical implementation.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="role">MS Education</div>
+      <div class="org">Agriculture University</div>
+      <div class="desc">
+        Strong academic foundation in research methodology, data analysis, and structured problem-solving —
+        skills I apply directly to digital strategy planning today.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects">
+  <div class="eyebrow reveal">Projects</div>
+  <h2 class="reveal" style="font-size:2.2rem; margin-bottom:44px;">Case Studies</h2>
+
+  <div class="proj-grid">
+    <div class="proj-card glass reveal">
+      <div class="proj-num">01</div>
+      <h3>SEO Growth Campaign</h3>
+      <p>Keyword research and on-page SEO for a client website, resulting in measurable growth in organic traffic.</p>
+      <div class="proj-tags"><span>SEO</span><span>Analytics</span><span>Content</span></div>
+    </div>
+
+    <div class="proj-card glass reveal">
+      <div class="proj-num">02</div>
+      <h3>Business Landing Page</h3>
+      <p>A responsive landing page built with HTML/CSS/JS, featuring mobile-first design and fast load times.</p>
+      <div class="proj-tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+    </div>
+
+    <div class="proj-card glass reveal">
+      <div class="proj-num">03</div>
+      <h3>Social Media Ad Campaign</h3>
+      <p>A multi-platform ad campaign covering creative content, audience targeting, and performance reporting.</p>
+      <div class="proj-tags"><span>Ads</span><span>Strategy</span><span>Reporting</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="eyebrow reveal">Contact</div>
+  <h2 class="reveal" style="font-size:2.2rem; margin-bottom:44px;">Let's Connect.</h2>
+
+  <div class="contact-grid">
+    <div class="reveal">
+      <p style="color:var(--muted); line-height:1.8; max-width:420px;">
+        Have a new project in mind, or just want to talk about digital marketing and web development?
+        Reach out through the links below or send a message.
+      </p>
+      <div class="social-list">
+        <a href="mailto:your.email@example.com"><span class="dot"></span>ayesharajpoot97@gmail.com</a>
+        <a href="#"><span class="dot"></span>https://www.linkedin.com/in/ayesha-chandni-19b139307/</a>
+        <a href="#"><span class="dot"></span>https://github.com/ayeshachandni</a>
+        <a href="#"><span class="dot"></span>instagram.com/digispark</a>
+      </div>
+    </div>
+
+    <form class="glass reveal" onsubmit="return false;">
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Your name">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="msg">Message</label>
+        <textarea id="msg" placeholder="Write your message..."></textarea>
+      </div>
+      <button class="submit-btn" type="submit">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  © 2026 <span>Your Name</span> — Digital Marketing &amp; Web Development
+</footer>
+
+<script>
+  // ---- Reveal on scroll ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---- Floating card parallax (mouse) ----
+  const wrap = document.getElementById('orbitWrap');
+  const cards = document.querySelectorAll('.float-card');
+  if(wrap){
+    wrap.addEventListener('mousemove', (e)=>{
+      const rect = wrap.getBoundingClientRect();
+      const cx = rect.width/2, cy = rect.height/2;
+      const x = e.clientX - rect.left - cx;
+      const y = e.clientY - rect.top - cy;
+      cards.forEach(card=>{
+        const depth = parseInt(card.dataset.depth) / 1000;
+        const rx = (-y * depth).toFixed(2);
+        const ry = (x * depth).toFixed(2);
+        card.style.transform = `translateZ(20px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+    });
+    wrap.addEventListener('mouseleave', ()=>{
+      cards.forEach(card => card.style.transform = 'translateZ(0) rotateX(0) rotateY(0)');
+    });
+  }
+
+  // ---- Gentle floating idle animation ----
+  cards.forEach((card, i)=>{
+    let t = i * 1000;
+    setInterval(()=>{
+      t += 30;
+      const float = Math.sin(t/900) * 6;
+      card.style.marginTop = float + 'px';
+    }, 30);
+  });
+
+  // ---- Parallax scroll on hero orbs ----
+  window.addEventListener('scroll', ()=>{
+    const y = window.scrollY;
+    document.querySelector('.glow-orb.a').style.transform = `translateY(${y*0.15}px)`;
+    document.querySelector('.glow-orb.b').style.transform = `translateY(${-y*0.1}px)`;
+  });
+
+  // ---- Project card tilt on hover ----
+  document.querySelectorAll('.proj-card').forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width/2;
+      const y = e.clientY - r.top - r.height/2;
+      card.style.transform = `rotateX(${(-y/18).toFixed(2)}deg) rotateY(${(x/18).toFixed(2)}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', ()=>{
+      card.style.transform = 'rotateX(0) rotateY(0) translateY(0)';
+    });
+  });
+</script>
+
+</body>
+</html>
